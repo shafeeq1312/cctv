@@ -37,6 +37,12 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/services', serviceRoutes);
 
 // Global Error Handler
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Lucky Communication CCTV API is running',
+    status: 'success'
+  });
+});
 app.use((err, req, res, next) => {
   console.error('Express Error:', err.stack);
   res.status(500).json({
