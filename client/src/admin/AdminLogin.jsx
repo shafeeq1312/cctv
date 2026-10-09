@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { Lock, Mail, AlertCircle, ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 
 const AdminLogin = () => {
@@ -46,17 +46,21 @@ const AdminLogin = () => {
         {/* Top Glow Accent */}
         <div className="absolute -top-12 -right-12 w-40 h-40 bg-blue-600/20 rounded-full filter blur-2xl pointer-events-none"></div>
 
-        {/* Header with Shop Logo */}
+        {/* Header with Shop Logo & Welcome Message */}
         <div className="text-center space-y-3">
-          <div className="w-16 h-16 rounded-2xl bg-slate-950 border border-slate-700/80 flex items-center justify-center mx-auto shadow-xl shadow-blue-600/30 p-1.5 overflow-hidden">
+          <div className="w-16 h-16 rounded-2xl bg-slate-950 border border-slate-700/80 flex items-center justify-center mx-auto shadow-xl shadow-blue-600/30 p-1.5 overflow-hidden group hover:scale-105 transition-transform duration-300">
             <img src={logoUrl} alt="Lucky Communication Logo" className="w-full h-full object-contain" />
           </div>
-          <div>
-            <h1 className="text-2xl font-black text-white">
-              Lucky Communication
+          
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-cyan-500/30 text-cyan-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" /> Authorized Admin Access
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight pt-1">
+              Welcome to Admin Portal
             </h1>
-            <p className="text-[11px] text-cyan-400 font-extrabold uppercase tracking-widest mt-1">
-              Admin Security Portal
+            <p className="text-slate-400 text-xs font-medium max-w-xs mx-auto leading-relaxed">
+              Please enter your administrator credentials to manage CCTV products, services, and enquiries.
             </p>
           </div>
         </div>

@@ -31,48 +31,54 @@ const HERO_SHOWCASE_IMAGES = [
     url: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=900&q=80',
     title: 'Hikvision 4K Ultra HD Bullet Camera',
     tag: 'Outdoor Weatherproof • EXIR 2.0 Night Vision (30m)',
-    badge: '4K ULTRA HD',
-    type: 'Bullet Camera'
+    chip: '4K Bullet',
+    camCode: 'CAM-01',
+    res: '4K UHD'
   },
   {
     id: 2,
     url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=900&q=80',
     title: 'CP Plus 360° Smart PTZ Dome Camera',
     tag: 'Motorized Pan-Tilt-Zoom • Smart Motion Tracking',
-    badge: '360° COVERAGE',
-    type: 'PTZ Dome'
+    chip: '360° PTZ',
+    camCode: 'CAM-02',
+    res: '2K QHD'
   },
   {
     id: 3,
     url: 'https://images.unsplash.com/photo-1557862921-37829c790f19?auto=format&fit=crop&w=900&q=80',
     title: 'ColorVu 24/7 Full-Color Night Surveillance',
     tag: 'Vibrant Day-Quality Color in Pitch Darkness',
-    badge: 'COLORVU NIGHT',
-    type: 'Night Vision'
+    chip: 'ColorVu',
+    camCode: 'CAM-03',
+    res: 'COLORVU'
   },
   {
     id: 4,
     url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=900&q=80',
     title: 'Realtime AI Face Recognition & Biometric System',
     tag: 'Dual High-Speed Face, Fingerprint & RFID Access',
-    badge: 'AI BIOMETRICS',
-    type: 'Biometrics'
+    chip: 'Biometrics',
+    camCode: 'BIO-01',
+    res: 'AI-FACE'
   },
   {
     id: 5,
     url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=900&q=80',
     title: '16-Channel Surveillance DVR / NVR Control Station',
     tag: 'Multi-Screen Live Monitoring & High Capacity Storage',
-    badge: 'SURVEILLANCE HUB',
-    type: 'DVR / NVR'
+    chip: 'DVR Hub',
+    camCode: 'NVR-16',
+    res: '16-CH HUB'
   },
   {
     id: 6,
     url: '/images/lucky_banner.png',
     title: 'Lucky Communication Official Showroom',
     tag: '17, Aarthi Theatre Road, Dindigul • Since 2013',
-    badge: 'DINDIGUL STORE',
-    type: 'Showroom'
+    chip: 'Store',
+    camCode: 'STORE',
+    res: 'DINDIGUL'
   }
 ];
 
@@ -233,29 +239,77 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right Hero Multi-Image Showcase Carousel (Hero Section Kulla Multiple Images) */}
+            {/* Right Hero Multi-Image CCTV Surveillance HUD Showcase (Ultra-Attractive UI) */}
             <div 
-              className="lg:col-span-5 flex flex-col items-center justify-center mx-auto w-full"
+              className="lg:col-span-5 flex flex-col items-center justify-center mx-auto w-full relative group"
               onMouseEnter={() => setIsHeroPaused(true)}
               onMouseLeave={() => setIsHeroPaused(false)}
             >
-              <div className="w-full relative rounded-3xl p-3 bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 shadow-2xl shadow-cyan-500/15 overflow-hidden group transition-all duration-500">
+              {/* Ambient Cyber Neon Aura Glow */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-cyan-500/25 via-blue-600/20 to-purple-600/25 rounded-3xl blur-2xl opacity-75 group-hover:opacity-100 transition-all duration-700 pointer-events-none"></div>
+
+              {/* Main Monitor Console Chassis */}
+              <div className="w-full relative rounded-3xl p-3 sm:p-4 bg-slate-950/90 backdrop-blur-xl border border-cyan-500/40 hover:border-cyan-400 shadow-2xl shadow-cyan-500/20 overflow-hidden transition-all duration-500">
                 
-                {/* Top Live Surveillance Badge */}
-                <div className="absolute top-5 right-5 z-20 pointer-events-none">
-                  <div className="bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-rose-500/40 flex items-center gap-2 shadow-lg">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
-                    </span>
-                    <span className="text-[10px] font-black text-rose-300 uppercase tracking-wider">
-                      LIVE SURVEILLANCE
-                    </span>
-                  </div>
+                {/* 1. Top Segmented Progress Bar (3s Auto-Slide Indicator) */}
+                <div className="grid grid-cols-6 gap-1.5 mb-3 px-1">
+                  {HERO_SHOWCASE_IMAGES.map((img, idx) => (
+                    <button
+                      key={img.id}
+                      onClick={() => setHeroIndex(idx)}
+                      className="group/bar relative h-1.5 rounded-full overflow-hidden bg-slate-800 transition-all hover:h-2"
+                      title={img.title}
+                    >
+                      <div
+                        className={`h-full rounded-full transition-all ${
+                          heroIndex === idx
+                            ? 'w-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-sm shadow-cyan-400'
+                            : idx < heroIndex
+                            ? 'w-full bg-slate-600'
+                            : 'w-0'
+                        }`}
+                      />
+                    </button>
+                  ))}
                 </div>
 
-                {/* Main Hero Image Container with Smooth Display */}
-                <div className="relative overflow-hidden rounded-2xl h-[330px] sm:h-[380px] bg-slate-950 flex items-center justify-center">
+                {/* 2. CCTV Camera Viewfinder Screen Container */}
+                <div className="relative overflow-hidden rounded-2xl h-[330px] sm:h-[390px] bg-slate-950 flex items-center justify-center border border-slate-800">
+                  
+                  {/* Camera Viewfinder 4-Corner Reticle Brackets */}
+                  <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-cyan-400/90 pointer-events-none z-20"></div>
+                  <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-cyan-400/90 pointer-events-none z-20"></div>
+                  <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-cyan-400/90 pointer-events-none z-20"></div>
+                  <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-cyan-400/90 pointer-events-none z-20"></div>
+
+                  {/* Viewfinder Center Crosshair */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 opacity-20">
+                    <div className="w-10 h-10 border border-cyan-400 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                    </div>
+                  </div>
+
+                  {/* Top HUD Overlay Bar */}
+                  <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none px-2">
+                    {/* Camera Feed Code & Resolution */}
+                    <div className="bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full border border-cyan-500/40 text-cyan-300 font-mono text-[11px] font-bold tracking-wider flex items-center gap-1.5 shadow-lg">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                      <span>{currentHero.camCode} // {currentHero.res}</span>
+                    </div>
+
+                    {/* Live Surveillance Pulsing Indicator */}
+                    <div className="bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/40 flex items-center gap-2 shadow-lg">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                      </span>
+                      <span className="text-[10px] font-black text-rose-300 uppercase tracking-wider">
+                        REC • LIVE
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Displayed CCTV Camera Photo with Smooth Scale & Transition */}
                   <img
                     key={currentHero.id}
                     src={currentHero.url}
@@ -264,14 +318,18 @@ const Home = () => {
                     onContextMenu={(e) => e.preventDefault()}
                     onDragStart={(e) => e.preventDefault()}
                   />
-                  {/* Gradient Lighting Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent opacity-75 pointer-events-none"></div>
+
+                  {/* Vignette & Gradient Lighting Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 pointer-events-none"></div>
+
+                  {/* Subtle Laser Scanline Beam */}
+                  <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent animate-scanline pointer-events-none"></div>
 
                   {/* Left Navigation Arrow */}
                   <button
                     onClick={handlePrevHero}
                     aria-label="Previous CCTV Image"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/70 hover:bg-cyan-500 hover:text-slate-950 text-white border border-slate-700/80 hover:border-cyan-400 flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm shadow-xl active:scale-90"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/75 hover:bg-cyan-500 hover:text-slate-950 text-white border border-slate-700/80 hover:border-cyan-400 flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm shadow-xl active:scale-90"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
@@ -280,57 +338,49 @@ const Home = () => {
                   <button
                     onClick={handleNextHero}
                     aria-label="Next CCTV Image"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/70 hover:bg-cyan-500 hover:text-slate-950 text-white border border-slate-700/80 hover:border-cyan-400 flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm shadow-xl active:scale-90"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/75 hover:bg-cyan-500 hover:text-slate-950 text-white border border-slate-700/80 hover:border-cyan-400 flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm shadow-xl active:scale-90"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
 
                   {/* Floating Bottom Info Card */}
-                  <div className="absolute bottom-3 left-3 right-3 bg-slate-950/90 backdrop-blur-md p-3.5 rounded-2xl border border-slate-800/90 shadow-2xl z-10 flex items-center justify-between gap-3">
+                  <div className="absolute bottom-3 left-3 right-3 bg-slate-950/90 backdrop-blur-md p-3.5 rounded-2xl border border-slate-800 shadow-2xl z-20 flex items-center justify-between gap-3">
                     <div className="space-y-0.5 min-w-0">
-                      <span className="text-[10px] text-cyan-400 font-black uppercase tracking-wider block truncate">
+                      <span className="text-xs sm:text-sm font-black text-white tracking-tight block truncate">
                         {currentHero.title}
                       </span>
-                      <p className="text-slate-300 font-semibold text-xs truncate">
+                      <p className="text-[11px] text-cyan-300 font-semibold truncate">
                         {currentHero.tag}
                       </p>
                     </div>
 
                     <button
                       onClick={() => handleOpenEnquiry(currentHero.title)}
-                      className="shrink-0 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-[11px] px-3 py-2 rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-1.5"
+                      className="shrink-0 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-1.5"
                     >
-                      <Sparkles className="w-3.5 h-3.5" /> Enquire
+                      <Sparkles className="w-3.5 h-3.5" /> Quote
                     </button>
                   </div>
                 </div>
 
-                {/* Hero Multi-Image Interactive Thumbnail Selector Bar */}
-                <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2 px-1">
-                  <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
+                {/* 3. Camera Feed Selector Chips Bar (Direct Camera Switching) */}
+                <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none w-full">
                     {HERO_SHOWCASE_IMAGES.map((img, idx) => (
                       <button
                         key={img.id}
                         onClick={() => setHeroIndex(idx)}
-                        className={`relative rounded-xl overflow-hidden transition-all duration-300 shrink-0 ${
+                        className={`text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition-all duration-300 shrink-0 flex items-center gap-1.5 ${
                           heroIndex === idx
-                            ? 'ring-2 ring-cyan-400 scale-105 opacity-100 shadow-md shadow-cyan-500/30'
-                            : 'opacity-40 hover:opacity-80 scale-95'
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-md shadow-cyan-500/30 scale-105'
+                            : 'bg-slate-900/90 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
                         }`}
-                        title={img.title}
                       >
-                        <img
-                          src={img.url}
-                          alt={img.title}
-                          className="w-11 h-9 object-cover rounded-lg"
-                        />
+                        <span className={`w-1.5 h-1.5 rounded-full ${heroIndex === idx ? 'bg-slate-950' : 'bg-slate-600'}`}></span>
+                        <span>{img.chip}</span>
                       </button>
                     ))}
                   </div>
-
-                  <span className="text-[10px] font-extrabold text-cyan-400/90 shrink-0 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800">
-                    {HERO_SHOWCASE_IMAGES.length} Cameras
-                  </span>
                 </div>
 
               </div>

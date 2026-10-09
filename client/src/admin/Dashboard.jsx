@@ -75,23 +75,49 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       
-      {/* Top Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-        <div>
-          <h1 className="text-3xl font-extrabold text-white">
-            Admin Management Dashboard
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Overview of store catalog, customer enquiries, and category inventory.
-          </p>
-        </div>
+      {/* Top Admin Welcome Banner */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-950/80 via-slate-900 to-slate-900 border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        {/* Glow Accents */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-10 left-1/3 w-60 h-60 bg-blue-600/10 rounded-full blur-2xl pointer-events-none"></div>
 
-        <Link
-          to="/admin/products/add"
-          className="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-blue-600/30 flex items-center gap-2 transition w-fit"
-        >
-          <Plus className="w-4 h-4" /> Add New Product
-        </Link>
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="inline-flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 px-3 py-1 rounded-full text-xs font-black tracking-wide shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Active Admin Session
+              </span>
+              <span className="text-slate-600 text-xs hidden sm:inline">•</span>
+              <span className="text-cyan-400 text-xs font-bold">
+                Lucky Communication • Dindigul Store
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+              Welcome Back, Administrator! 👋
+            </h1>
+
+            <p className="text-slate-300 text-xs sm:text-sm max-w-2xl font-medium leading-relaxed">
+              Welcome to the Lucky Communication Administration Portal. You have full access to manage your CCTV products, services, customer enquiries, and monitor store catalog activity.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <Link
+              to="/admin/products/add"
+              className="btn-primary-glow text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 transition active:scale-95"
+            >
+              <Plus className="w-4 h-4" /> Add New Product
+            </Link>
+            <Link
+              to="/admin/enquiries"
+              className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 hover:border-cyan-400 font-extrabold text-xs sm:text-sm px-4 py-3 rounded-xl shadow-md flex items-center gap-2 transition"
+            >
+              <MessageSquareText className="w-4 h-4" /> View Enquiries
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* 4 Stat Overview Cards */}
