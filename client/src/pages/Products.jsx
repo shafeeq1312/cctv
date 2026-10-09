@@ -8,6 +8,7 @@ import {
   getCachedCategories, 
   setCachedCategories 
 } from '../services/dataCache';
+import { FALLBACK_PRODUCTS, FALLBACK_CATEGORIES } from '../services/fallbackData';
 import ProductCard from '../components/ProductCard';
 import EnquiryModal from '../components/EnquiryModal';
 
@@ -15,9 +16,13 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const cachedProds = getCachedProducts();
   const cachedCats = getCachedCategories();
-  const [products, setProducts] = useState(cachedProds);
-  const [categories, setCategories] = useState(cachedCats);
-  const [loading, setLoading] = useState(cachedProds.length === 0);
+  const [products, setProducts] = useState(
+    Array.isArray(cachedProds) && cachedProds.length > 0 ? cachedProds : FALLBACK_PRODUCTS
+  );
+  const [categories, setCategories] = useState(
+    Array.isArray(cachedCats) && cachedCats.length > 0 ? cachedCats : FALLBACK_CATEGORIES
+  );
+  const [loading, setLoading] = useState(false);
 
   // Filters state
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -41,19 +46,16 @@ const Products = () => {
   const fetchCategories = async () => {
     try {
       const res = await API.get('/categories');
-      if (res.data.success) {
+      if (res.data?.success && Array.isArray(res.data.categories) && res.data.categories.length > 0) {
         setCategories(res.data.categories);
         setCachedCategories(res.data.categories);
       }
     } catch (err) {
-      console.error('Failed to fetch categories:', err);
+      console.warn('Categories API fetch delayed, using cached fallback:', err.message);
     }
   };
 
   const fetchProducts = async () => {
-    if (products.length === 0) {
-      setLoading(true);
-    }
     try {
       const search = searchParams.get('search') || searchTerm;
       let url = `/products?status=active`;
@@ -71,14 +73,14 @@ const Products = () => {
       if (priceSort === 'price-high') url += `&sort=price-high`;
 
       const res = await API.get(url);
-      if (res.data.success) {
+      if (res.data?.success && Array.isArray(res.data.products) && res.data.products.length > 0) {
         setProducts(res.data.products);
         if (!search && (!selectedCategory || selectedCategory === 'All') && availability === 'all') {
           setCachedProducts(res.data.products);
         }
       }
     } catch (err) {
-      console.error('Failed to fetch products:', err);
+      console.warn('Products API fetch delayed, retaining active products:', err.message);
     } finally {
       setLoading(false);
     }

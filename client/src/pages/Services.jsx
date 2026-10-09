@@ -12,11 +12,16 @@ import {
   MessageSquare
 } from 'lucide-react';
 import API from '../services/api';
+import { getCachedServices, setCachedServices } from '../services/dataCache';
+import { FALLBACK_SERVICES } from '../services/fallbackData';
 import EnquiryModal from '../components/EnquiryModal';
 
 const Services = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const cached = getCachedServices();
+  const [services, setServices] = useState(
+    Array.isArray(cached) && cached.length > 0 ? cached : FALLBACK_SERVICES
+  );
+  const [loading, setLoading] = useState(false);
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
 
@@ -27,11 +32,12 @@ const Services = () => {
   const fetchServices = async () => {
     try {
       const res = await API.get('/services');
-      if (res.data.success) {
+      if (res.data?.success && Array.isArray(res.data.services) && res.data.services.length > 0) {
         setServices(res.data.services);
+        setCachedServices(res.data.services);
       }
     } catch (err) {
-      console.error('Failed to fetch services:', err);
+      console.warn('Failed to fetch live services, using cached fallback:', err.message);
     } finally {
       setLoading(false);
     }

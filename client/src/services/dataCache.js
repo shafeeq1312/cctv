@@ -1,4 +1,5 @@
 // High-performance client-side cache for instant 0ms transitions
+import { FALLBACK_PRODUCTS, FALLBACK_CATEGORIES, FALLBACK_SERVICES } from './fallbackData';
 
 const MEMORY_CACHE = {
   products: null,
@@ -40,7 +41,8 @@ export const getCachedProducts = () => {
   } catch (e) {
     // SessionStorage unavailable or restricted
   }
-  return [];
+  // Return instant fallback catalog so UI is never blank
+  return FALLBACK_PRODUCTS;
 };
 
 export const setCachedProducts = (products) => {
@@ -60,7 +62,7 @@ export const getCachedProductById = (id) => {
     return MEMORY_CACHE.productMap.get(id);
   }
   const products = getCachedProducts();
-  const found = products.find((p) => p && p._id === id);
+  const found = products.find((p) => p && (p._id === id || p.id === id));
   if (found) {
     MEMORY_CACHE.productMap.set(id, found);
     return found;
@@ -87,7 +89,7 @@ export const getCachedCategories = () => {
       }
     }
   } catch (e) {}
-  return [];
+  return FALLBACK_CATEGORIES;
 };
 
 export const setCachedCategories = (categories) => {
@@ -112,7 +114,7 @@ export const getCachedServices = () => {
       }
     }
   } catch (e) {}
-  return [];
+  return FALLBACK_SERVICES;
 };
 
 export const setCachedServices = (services) => {
