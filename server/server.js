@@ -69,12 +69,40 @@ app.use((err, req, res, next) => {
   });
 });
 
+const { execSync } = require('child_process');
+
 const PORT = process.env.PORT || 5000;
+
+// Auto-free port on local development to prevent EADDRINUSE crashes
+const freePortIfInUse = (port) => {
+  if (process.env.NODE_ENV === 'production') return;
+  try {
+    if (process.platform === 'win32') {
+      const output = execSync(`netstat -ano | findstr :${port}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+      const lines = output.trim().split('\n');
+      for (const line of lines) {
+        if (line.includes('LISTENING')) {
+          const parts = line.trim().split(/\s+/);
+          const pid = Number(parts[parts.length - 1]);
+          if (pid && pid !== process.pid && pid > 0) {
+            try {
+              process.kill(pid, 'SIGKILL');
+              console.log(`Released port ${port} from previous process ${pid}`);
+            } catch (e) {}
+          }
+        }
+      }
+    }
+  } catch (e) {
+    // Port not in use, continue cleanly
+  }
+};
 
 const startServer = async () => {
   try {
     await connectDB();
     await seedData();
+    freePortIfInUse(PORT);
     app.listen(PORT, () => {
       console.log(`=======================================================`);
       console.log(`🚀 Lucky Communication Server running on port ${PORT}`);
