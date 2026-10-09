@@ -86,8 +86,8 @@ const freePortIfInUse = (port) => {
           const pid = Number(parts[parts.length - 1]);
           if (pid && pid !== process.pid && pid > 0) {
             try {
-              process.kill(pid, 'SIGKILL');
-              console.log(`Released port ${port} from previous process ${pid}`);
+              execSync(`taskkill /F /PID ${pid}`, { stdio: 'ignore' });
+              console.log(`⚡ Released port ${port} from previous process PID ${pid}`);
             } catch (e) {}
           }
         }
@@ -100,14 +100,28 @@ const freePortIfInUse = (port) => {
 
 const startServer = async () => {
   try {
+    freePortIfInUse(PORT);
     await connectDB();
     await seedData();
-    freePortIfInUse(PORT);
-    app.listen(PORT, () => {
+    
+    const server = app.listen(PORT, () => {
       console.log(`=======================================================`);
       console.log(`🚀 Lucky Communication Server running on port ${PORT}`);
       console.log(`👉 API Base: http://localhost:${PORT}/api`);
       console.log(`=======================================================`);
+    });
+
+    server.on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.warn(`⚠️ Port ${PORT} is busy, releasing and retrying...`);
+        freePortIfInUse(PORT);
+        setTimeout(() => {
+          server.close();
+          server.listen(PORT);
+        }, 1200);
+      } else {
+        console.error('Server error:', err);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
