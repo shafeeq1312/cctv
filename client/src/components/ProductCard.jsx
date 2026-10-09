@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onEnquire }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -75,21 +75,34 @@ const ProductCard = ({ product }) => {
           </div>
         )}
 
-        {/* Price & Action Button */}
-        <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-2">
+        {/* Price & Action Buttons */}
+        <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-1.5">
           <div>
-            <span className="text-[10px] uppercase font-black tracking-wider text-slate-500 dark:text-slate-400 block">Best Price</span>
-            <span className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
+            <span className="text-[9px] uppercase font-black tracking-wider text-slate-500 dark:text-slate-400 block">Best Price</span>
+            <span className="text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
               {formatPrice(product.price)}
             </span>
           </div>
 
-          <Link
-            to={`/products/${product._id}`}
-            className="btn-primary-glow text-white text-xs font-black px-4 py-2.5 rounded-xl flex items-center gap-1.5 active:scale-95 shrink-0"
-          >
-            View Details <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="flex items-center gap-1.5">
+            {onEnquire && (
+              <button
+                type="button"
+                onClick={() => onEnquire(product.name)}
+                className="bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-black px-3 py-2 rounded-xl hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-200 shrink-0"
+              >
+                Enquire
+              </button>
+            )}
+
+            <Link
+              to={`/products/${product._id}`}
+              className="group/btn btn-primary-glow text-white text-[11px] sm:text-xs font-black px-3 py-2 sm:py-2 rounded-xl flex items-center gap-1 hover:scale-105 active:scale-95 transition-all duration-200 shrink-0"
+            >
+              <span>Details</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-200" />
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -13,7 +13,7 @@ const getServices = async (req, res) => {
       query.status = 'active';
     }
 
-    const services = await Service.find(query).sort({ createdAt: 1 });
+    const services = await Service.find(query).sort({ createdAt: 1 }).lean();
     return res.status(200).json({ success: true, count: services.length, services });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

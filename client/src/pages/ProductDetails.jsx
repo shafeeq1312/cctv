@@ -24,6 +24,7 @@ const ProductDetails = () => {
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     fetchProductDetails();
   }, [id]);
 
@@ -84,21 +85,21 @@ const ProductDetails = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8 sm:space-y-12">
       
       {/* Back Link */}
       <Link
         to="/products"
-        className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition font-semibold"
+        className="inline-flex items-center gap-2 text-xs sm:text-sm text-slate-400 hover:text-white transition font-bold"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Products
       </Link>
 
       {/* Main Details Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-start">
         
         {/* Left Column: Product Image Showcase */}
-        <div className="lg:col-span-6 bg-white dark:bg-slate-950 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl relative">
+        <div className="lg:col-span-6 w-full max-w-lg mx-auto lg:max-w-none bg-white dark:bg-slate-950 p-3 sm:p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl relative">
           <div className="aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center border border-slate-200 dark:border-slate-800">
             <img
               src={product.image}

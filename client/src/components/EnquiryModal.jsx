@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Send, CheckCircle, AlertCircle, Phone, Mail, User, MessageSquare, Package } from 'lucide-react';
 import API from '../services/api';
 
@@ -13,6 +13,21 @@ const EnquiryModal = ({ isOpen, onClose, productName = '' }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(prev => ({
+        ...prev,
+        product: productName || 'General Enquiry'
+      }));
+      setTimeout(() => {
+        if (nameInputRef.current) {
+          nameInputRef.current.focus();
+        }
+      }, 100);
+    }
+  }, [productName, isOpen]);
 
   if (!isOpen) return null;
 
@@ -54,29 +69,29 @@ const EnquiryModal = ({ isOpen, onClose, productName = '' }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-700/80 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fade-in">
+      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700/90 rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col animate-slide-up">
         
         {/* Header */}
-        <div className="bg-slate-800/80 px-6 py-4 border-b border-slate-700 flex justify-between items-center">
+        <div className="shrink-0 bg-slate-800/90 px-5 py-4 border-b border-slate-700/80 flex justify-between items-center">
           <div>
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-blue-400" /> Send Product Enquiry
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
               Fill out the form below to get an instant call back & quote.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-slate-700/50 text-slate-400 hover:text-white transition"
+            className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white border border-slate-700 transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form Body */}
-        <div className="p-6">
+        {/* Form Body - Scrollable inside on mobile */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {success ? (
             <div className="py-8 text-center space-y-3">
               <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-500/40 animate-bounce">
@@ -120,6 +135,7 @@ const EnquiryModal = ({ isOpen, onClose, productName = '' }) => {
                 </label>
                 <div className="relative">
                   <input
+                    ref={nameInputRef}
                     type="text"
                     name="name"
                     required

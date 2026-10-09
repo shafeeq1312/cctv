@@ -5,7 +5,7 @@ const Category = require('../models/Category');
 // @access  Public
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find().sort({ createdAt: 1 });
+    const categories = await Category.find().sort({ createdAt: 1 }).lean();
     return res.status(200).json({ success: true, count: categories.length, categories });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

@@ -1,7 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'instant'
+    });
+  }, [pathname]);
+  return null;
+};
 
 // Components
 import Navbar from './components/Navbar';
@@ -45,6 +58,7 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
       <Router>
+        <ScrollToTop />
         <Routes>
           
           {/* Public Customer Website Routes */}

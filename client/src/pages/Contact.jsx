@@ -173,7 +173,7 @@ const Contact = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Interactive Enquiry Form */}
-        <div className="lg:col-span-7 bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-xl space-y-6">
+        <div id="enquiry-form-section" className="lg:col-span-7 scroll-mt-28 bg-white dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-xl space-y-6">
           <div>
             <div className="inline-block bg-blue-100 dark:bg-blue-950 border border-blue-300 dark:border-blue-800 text-blue-800 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-extrabold mb-2">
               Customer Enquiry Form

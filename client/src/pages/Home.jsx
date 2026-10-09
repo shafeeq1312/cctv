@@ -74,7 +74,7 @@ const Home = () => {
         <div className="absolute top-1/3 right-10 w-96 h-96 bg-blue-600/10 dark:bg-blue-600/20 rounded-full filter blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-10 left-1/3 w-80 h-80 bg-purple-600/10 dark:bg-purple-600/15 rounded-full filter blur-3xl pointer-events-none"></div>
 
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Hero Content */}
@@ -95,13 +95,13 @@ const Home = () => {
               <div className="relative z-50 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                 <a
                   href="#home-all-products-grid"
-                  className="w-full sm:w-auto btn-primary-glow text-white font-black text-sm px-8 py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 shadow-xl transition-all duration-300"
+                  className="w-full sm:w-auto btn-primary-glow text-white font-black text-sm px-8 py-4 rounded-2xl flex items-center justify-center gap-2 group hover:scale-105 active:scale-95 shadow-xl transition-all duration-300"
                 >
-                  Explore Products <ArrowRight className="w-4.5 h-4.5" />
+                  Explore Products <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1.5 transition-transform duration-300" />
                 </a>
                 <Link
                   to="/contact"
-                  className="w-full sm:w-auto bg-white dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 text-cyan-700 dark:text-cyan-400 hover:text-cyan-800 dark:hover:text-white border border-cyan-400/60 dark:border-cyan-500/40 font-black text-sm px-8 py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition-all duration-300"
+                  className="w-full sm:w-auto bg-slate-900/90 hover:bg-slate-800 text-cyan-400 hover:text-white border border-cyan-500/40 hover:border-cyan-400 font-black text-sm px-8 py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 hover:shadow-cyan-500/20"
                 >
                   Contact Us
                 </Link>
@@ -109,12 +109,12 @@ const Home = () => {
 
               {/* Badges (Free Site Visit & Genuine Brands) */}
               <div className="pt-6 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-2 gap-4 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-black max-w-md mx-auto lg:mx-0">
-                <div className="flex items-center gap-2.5 justify-center lg:justify-start">
-                  <CheckCircle className="w-4.5 h-4.5 text-emerald-500 shrink-0" />
+                <div className="flex items-center gap-2.5 justify-center lg:justify-start group cursor-default">
+                  <CheckCircle className="w-4.5 h-4.5 text-emerald-500 shrink-0 group-hover:scale-125 transition-transform duration-200" />
                   <span>Free Dindigul Site Visit</span>
                 </div>
-                <div className="flex items-center gap-2.5 justify-center lg:justify-start">
-                  <CheckCircle className="w-4.5 h-4.5 text-emerald-500 shrink-0" />
+                <div className="flex items-center gap-2.5 justify-center lg:justify-start group cursor-default">
+                  <CheckCircle className="w-4.5 h-4.5 text-emerald-500 shrink-0 group-hover:scale-125 transition-transform duration-200" />
                   <span>100% Genuine Brands</span>
                 </div>
               </div>
@@ -122,22 +122,36 @@ const Home = () => {
 
             {/* Right Hero Image Card (Centered HD CCTV Camera) */}
             <div className="lg:col-span-5 animate-float flex items-center justify-center mx-auto w-full">
-              <div className="w-full relative rounded-3xl p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/40 shadow-2xl shadow-cyan-500/10 overflow-hidden group">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR62fpPlFyBxPOam7jZT15Wa8jrNJ9SSYLoVJlElLWaiSn3j1fOxFhIUUg&s=10"
-                  alt="Modern HD CCTV Security Camera System"
-                  className="w-full h-[340px] sm:h-[400px] object-cover rounded-2xl group-hover:scale-105 transition-transform duration-700"
-                  onContextMenu={(e) => e.preventDefault()}
-                  onDragStart={(e) => e.preventDefault()}
-                />
+              <div className="w-full relative rounded-3xl p-2.5 bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 shadow-2xl shadow-cyan-500/15 overflow-hidden group transition-all duration-500 hover:shadow-cyan-500/30">
+                
+                {/* Live Surveillance Badge */}
+                <div className="absolute top-4 right-4 z-20 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-rose-500/40 flex items-center gap-2 shadow-lg">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                  </span>
+                  <span className="text-[10px] font-black text-rose-300 uppercase tracking-wider">LIVE SURVEILLANCE</span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR62fpPlFyBxPOam7jZT15Wa8jrNJ9SSYLoVJlElLWaiSn3j1fOxFhIUUg&s=10"
+                    alt="Modern HD CCTV Security Camera System"
+                    className="w-full h-[340px] sm:h-[400px] object-cover rounded-2xl group-hover:scale-108 transition-transform duration-700 ease-out select-none"
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                  />
+                  {/* Subtle Gradient Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none"></div>
+                </div>
                 
                 {/* Floating Bottom Badge */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 dark:bg-slate-950/90 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-2xl">
+                <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 backdrop-blur-md p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between shadow-2xl group-hover:border-cyan-500/50 transition-colors duration-300">
                   <div>
-                    <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-black uppercase tracking-wider block">4K Night Vision CCTV</span>
-                    <span className="text-slate-900 dark:text-white font-extrabold text-xs">High Definition Security Systems</span>
+                    <span className="text-[10px] text-cyan-400 font-black uppercase tracking-wider block">4K Night Vision CCTV</span>
+                    <span className="text-white font-extrabold text-xs">High Definition Security Systems</span>
                   </div>
-                  <div className="w-9 h-9 rounded-xl bg-cyan-600 flex items-center justify-center shrink-0 shadow-lg shadow-cyan-500/40">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-600 flex items-center justify-center shrink-0 shadow-lg shadow-cyan-500/40 group-hover:rotate-12 transition-transform duration-300">
                     <Camera className="w-4.5 h-4.5 text-white" />
                   </div>
                 </div>
@@ -149,7 +163,7 @@ const Home = () => {
       </section>
 
       {/* 2. DIRECT PRODUCTS DISPLAY SECTION */}
-      <section id="home-all-products-grid" className="max-w-[1440px] mx-auto px-6 lg:px-12 scroll-mt-24 space-y-8">
+      <section id="home-all-products-grid" className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 scroll-mt-24 space-y-8">
         
         {/* Section Title & Search */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -214,7 +228,7 @@ const Home = () => {
       </section>
 
       {/* 3. CALL TO ACTION BANNER */}
-      <section className="max-w-[1440px] mx-auto px-6 lg:px-12">
+      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
         <div className="bg-white dark:bg-gradient-to-r dark:from-blue-950 dark:via-indigo-950 dark:to-slate-950 border border-slate-200 dark:border-blue-500/30 rounded-3xl p-8 sm:p-12 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="space-y-3 text-center lg:text-left max-w-xl">
             <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">

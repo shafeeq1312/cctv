@@ -36,13 +36,31 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/services', serviceRoutes);
 
-// Global Error Handler
-app.get('/', (req, res) => {
-  res.json({
+const path = require('path');
+const fs = require('fs');
+
+// Serve static frontend build files if dist folder exists
+const clientDistPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+}
+
+// SPA Catch-All Route: Fallback all non-API GET requests to index.html to prevent 404 on refresh / desktop view
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  const indexPath = path.join(clientDistPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  return res.json({
     message: 'Lucky Communication CCTV API is running',
     status: 'success'
   });
 });
+
+// Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Express Error:', err.stack);
   res.status(500).json({
