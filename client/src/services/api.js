@@ -1,14 +1,10 @@
 import axios from 'axios';
 
-// Dynamically select fast local server when developing locally or on local Wi-Fi
+// Dynamically select base URL (uses Vite proxy /api locally, fallback to Render in production)
 const getBaseURL = () => {
   if (typeof window !== 'undefined') {
-    const { hostname, port } = window.location;
-    // If frontend is directly served by Express on port 5000
-    if (port === '5000') {
-      return '/api';
-    }
-    // Local development machine or mobile device connected over local Wi-Fi / hotspot
+    const { hostname } = window.location;
+    // On local machine or local Wi-Fi, use relative /api (proxied by Vite to port 5000, or served by Express)
     if (
       hostname === 'localhost' ||
       hostname === '127.0.0.1' ||
@@ -17,7 +13,7 @@ const getBaseURL = () => {
       hostname.startsWith('172.') ||
       hostname.endsWith('.local')
     ) {
-      return `http://${hostname}:5000/api`;
+      return '/api';
     }
   }
   return import.meta.env.VITE_API_URL || 'https://cctv-lftq.onrender.com/api';
@@ -25,7 +21,7 @@ const getBaseURL = () => {
 
 const API = axios.create({
   baseURL: getBaseURL(),
-  timeout: 10000,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json'
   }

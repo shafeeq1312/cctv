@@ -40,9 +40,10 @@ const Home = () => {
     }
     try {
       const res = await API.get('/products?status=active');
-      if (res.data.success) {
-        setAllProducts(res.data.products);
-        setCachedProducts(res.data.products);
+      const productsData = res.data?.products || (Array.isArray(res.data) ? res.data : []);
+      if (Array.isArray(productsData) && productsData.length > 0) {
+        setAllProducts(productsData);
+        setCachedProducts(productsData);
       }
     } catch (error) {
       console.error('Error fetching home products:', error);
@@ -63,14 +64,15 @@ const Home = () => {
     }
   };
 
-  // Filter products by search term if typed
+  // Safely filter products by search term if typed
   const displayedProducts = allProducts.filter((p) => {
-    return (
-      homeSearch.trim() === '' ||
-      p.name.toLowerCase().includes(homeSearch.toLowerCase()) ||
-      p.category.toLowerCase().includes(homeSearch.toLowerCase()) ||
-      p.description.toLowerCase().includes(homeSearch.toLowerCase())
-    );
+    if (!p) return false;
+    const search = homeSearch.trim().toLowerCase();
+    if (!search) return true;
+    const name = String(p.name || '').toLowerCase();
+    const category = String(p.category || '').toLowerCase();
+    const description = String(p.description || '').toLowerCase();
+    return name.includes(search) || category.includes(search) || description.includes(search);
   });
 
   return (
@@ -230,18 +232,31 @@ const Home = () => {
             ))}
           </div>
         ) : displayedProducts.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-3xl p-12 text-center space-y-3 shadow-md">
+          <div className="bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-3xl p-12 text-center space-y-3 shadow-md max-w-lg mx-auto">
             <Package className="w-10 h-10 text-slate-400 mx-auto" />
-            <h3 className="text-lg font-black text-slate-900 dark:text-white">No Products Found</h3>
+            <h3 className="text-lg font-black text-slate-900 dark:text-white">
+              {allProducts.length === 0 ? 'Connecting to Product Catalog...' : 'No Products Found'}
+            </h3>
             <p className="text-slate-600 dark:text-slate-400 text-xs max-w-sm mx-auto font-medium">
-              No products found matching your search term.
+              {allProducts.length === 0
+                ? 'Connecting to live CCTV catalog. Click below to reload products.'
+                : 'No products found matching your search term.'}
             </p>
-            <button
-              onClick={() => setHomeSearch('')}
-              className="btn-primary-glow text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md"
-            >
-              Clear Search
-            </button>
+            {allProducts.length === 0 ? (
+              <button
+                onClick={() => fetchHomeProducts()}
+                className="btn-primary-glow text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md inline-flex items-center gap-2"
+              >
+                <RefreshCw className="w-3.5 h-3.5" /> Reload Catalog
+              </button>
+            ) : (
+              <button
+                onClick={() => setHomeSearch('')}
+                className="btn-primary-glow text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md"
+              >
+                Clear Search
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
