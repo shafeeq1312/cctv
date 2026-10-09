@@ -14,12 +14,22 @@ import {
 import { AuthContext } from '../context/AuthContext';
 
 const AdminLayout = () => {
-  const { admin, logout } = useContext(AuthContext);
+  const { admin, loading, logout } = useContext(AuthContext);
   const logoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5Dh3X6wA63V0Bwc99yOUT_iB9wNTgGz1rph8VM1EJneCUgE42cQ3Wmop&s=10";
 
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  React.useEffect(() => {
+    if (!loading && !admin) {
+      navigate('/admin/login', { replace: true });
+    }
+  }, [admin, loading, navigate]);
+
+  if (!loading && !admin) {
+    return null;
+  }
 
   const navItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },

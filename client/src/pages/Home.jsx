@@ -7,16 +7,20 @@ import {
   Phone, 
   Sparkles, 
   Search,
-  Package
+  Package,
+  MapPin,
+  ShieldCheck
 } from 'lucide-react';
 import API from '../services/api';
+import { getCachedProducts, setCachedProducts } from '../services/dataCache';
 import ProductCard from '../components/ProductCard';
 import EnquiryModal from '../components/EnquiryModal';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const cachedInitial = getCachedProducts();
+  const [allProducts, setAllProducts] = useState(cachedInitial);
+  const [loading, setLoading] = useState(cachedInitial.length === 0);
   
   // Quick Search on Home Page
   const [homeSearch, setHomeSearch] = useState('');
@@ -30,11 +34,14 @@ const Home = () => {
   }, []);
 
   const fetchHomeProducts = async () => {
-    setLoading(true);
+    if (allProducts.length === 0) {
+      setLoading(true);
+    }
     try {
       const res = await API.get('/products?status=active');
       if (res.data.success) {
         setAllProducts(res.data.products);
+        setCachedProducts(res.data.products);
       }
     } catch (error) {
       console.error('Error fetching home products:', error);
@@ -77,45 +84,67 @@ const Home = () => {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Left Hero Content */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left animate-fade-in">
-              <div className="inline-flex items-center gap-2 bg-cyan-100 dark:bg-cyan-950/80 border border-cyan-300 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300 px-4 py-1.5 rounded-full text-xs font-black shadow-md tracking-wide">
-                <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Authorized Security Hardware & Installation
+            {/* Left Hero Content - Clean & Spacious */}
+            <div className="lg:col-span-7 space-y-5 text-center lg:text-left animate-fade-in">
+              
+              {/* Location & Brand Pill */}
+              <div className="inline-flex items-center gap-2 bg-slate-900/90 border border-cyan-500/30 text-cyan-400 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-md tracking-wide backdrop-blur-sm">
+                <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <span>17, Aarthi Theatre Rd, Dindigul</span>
+                <span className="text-slate-600 hidden sm:inline">•</span>
+                <span className="text-slate-300 hidden sm:inline">CCTV & Security Store</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                Protect What <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 dark:from-cyan-400 dark:via-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Matters Most</span>
-              </h1>
+              {/* Main Headline with Shop Name */}
+              <div className="space-y-1.5">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+                  LUCKY <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">COMMUNICATION</span>
+                </h1>
+                <p className="text-base sm:text-xl font-bold text-cyan-300/90 tracking-wide">
+                  Smart CCTV & Security Solutions • Dindigul
+                </p>
+              </div>
 
-              <p className="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-medium leading-relaxed">
-                Smart CCTV & Security Solutions for Homes, Shops, Offices and Businesses. High definition surveillance, biometric attendance, and access control devices.
+              {/* Crisp Description Words */}
+              <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                Authorized sales & expert installation of 4K night-vision CCTV cameras, biometric systems, and smart surveillance for homes, shops, and businesses.
               </p>
 
-              {/* Action Buttons with z-50 positioning */}
-              <div className="relative z-50 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              {/* Clean Action Buttons */}
+              <div className="relative z-50 flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
                 <a
                   href="#home-all-products-grid"
-                  className="w-full sm:w-auto btn-primary-glow text-white font-black text-sm px-8 py-4 rounded-2xl flex items-center justify-center gap-2 group hover:scale-105 active:scale-95 shadow-xl transition-all duration-300"
+                  className="w-full sm:w-auto btn-primary-glow text-white font-black text-xs sm:text-sm px-6 py-3.5 rounded-xl flex items-center justify-center gap-2 group hover:scale-105 active:scale-95 shadow-xl transition-all duration-300"
                 >
-                  Explore Products <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1.5 transition-transform duration-300" />
+                  Explore Products <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                 </a>
                 <Link
                   to="/contact"
-                  className="w-full sm:w-auto bg-slate-900/90 hover:bg-slate-800 text-cyan-400 hover:text-white border border-cyan-500/40 hover:border-cyan-400 font-black text-sm px-8 py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 hover:shadow-cyan-500/20"
+                  className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-cyan-400 hover:text-white border border-slate-700 hover:border-cyan-400 font-extrabold text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-300"
                 >
-                  Contact Us
+                  Contact Store
                 </Link>
+                <a
+                  href="tel:9876543210"
+                  className="w-full sm:w-auto bg-emerald-950/50 hover:bg-emerald-900/70 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400 font-bold text-xs sm:text-sm px-5 py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-300"
+                >
+                  <Phone className="w-3.5 h-3.5 text-emerald-400" /> +91 98765 43210
+                </a>
               </div>
 
-              {/* Badges (Free Site Visit & Genuine Brands) */}
-              <div className="pt-6 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-2 gap-4 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-black max-w-md mx-auto lg:mx-0">
-                <div className="flex items-center gap-2.5 justify-center lg:justify-start group cursor-default">
-                  <CheckCircle className="w-4.5 h-4.5 text-emerald-500 shrink-0 group-hover:scale-125 transition-transform duration-200" />
-                  <span>Free Dindigul Site Visit</span>
+              {/* Clean Trust Indicators */}
+              <div className="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-slate-400 text-xs font-semibold">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Free Site Visit</span>
                 </div>
-                <div className="flex items-center gap-2.5 justify-center lg:justify-start group cursor-default">
-                  <CheckCircle className="w-4.5 h-4.5 text-emerald-500 shrink-0 group-hover:scale-125 transition-transform duration-200" />
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>100% Genuine Brands</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <span>1 Year Warranty</span>
                 </div>
               </div>
             </div>

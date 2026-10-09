@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import API from './services/api';
+import { setCachedProducts, setCachedCategories } from './services/dataCache';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -54,6 +56,21 @@ const PublicLayout = () => {
 };
 
 function App() {
+  useEffect(() => {
+    // Eager background warmup for instant navigation
+    API.get('/products?status=active')
+      .then((res) => {
+        if (res.data?.success) setCachedProducts(res.data.products);
+      })
+      .catch(() => {});
+
+    API.get('/categories')
+      .then((res) => {
+        if (res.data?.success) setCachedCategories(res.data.categories);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>
@@ -77,6 +94,7 @@ function App() {
           {/* Protected Admin Dashboard Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="products" element={<ManageProducts />} />
               <Route path="products/add" element={<AddProduct />} />

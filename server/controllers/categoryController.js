@@ -1,12 +1,29 @@
 const Category = require('../models/Category');
 
+// Fast In-Memory Cache
+let categoriesCache = null;
+let lastCacheTime = 0;
+const CACHE_DURATION = 60 * 1000; // 60 seconds
+
+const invalidateCache = () => {
+  categoriesCache = null;
+  lastCacheTime = 0;
+};
+
 // @desc    Get all categories
 // @route   GET /api/categories
 // @access  Public
 const getCategories = async (req, res) => {
   try {
+    if (categoriesCache && Date.now() - lastCacheTime < CACHE_DURATION) {
+      return res.status(200).json(categoriesCache);
+    }
+
     const categories = await Category.find().sort({ createdAt: 1 }).lean();
-    return res.status(200).json({ success: true, count: categories.length, categories });
+    const responseData = { success: true, count: categories.length, categories };
+    categoriesCache = responseData;
+    lastCacheTime = Date.now();
+    return res.status(200).json(responseData);
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -30,6 +47,7 @@ const createCategory = async (req, res) => {
     const category = new Category({ name, description, icon });
     await category.save();
 
+    invalidateCache();
     return res.status(201).json({ success: true, message: 'Category created successfully', category });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -53,6 +71,7 @@ const updateCategory = async (req, res) => {
     if (icon) category.icon = icon;
 
     await category.save();
+    invalidateCache();
     return res.status(200).json({ success: true, message: 'Category updated successfully', category });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -70,6 +89,7 @@ const deleteCategory = async (req, res) => {
     }
 
     await Category.findByIdAndDelete(req.params.id);
+    invalidateCache();
     return res.status(200).json({ success: true, message: 'Category deleted successfully' });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, RefreshCw, Package, X, Check } from 'lucide-react';
 import API from '../services/api';
+import { 
+  getCachedProducts, 
+  setCachedProducts, 
+  getCachedCategories, 
+  setCachedCategories 
+} from '../services/dataCache';
 import ProductCard from '../components/ProductCard';
 import EnquiryModal from '../components/EnquiryModal';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const cachedProds = getCachedProducts();
+  const cachedCats = getCachedCategories();
+  const [products, setProducts] = useState(cachedProds);
+  const [categories, setCategories] = useState(cachedCats);
+  const [loading, setLoading] = useState(cachedProds.length === 0);
 
   // Filters state
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -35,6 +43,7 @@ const Products = () => {
       const res = await API.get('/categories');
       if (res.data.success) {
         setCategories(res.data.categories);
+        setCachedCategories(res.data.categories);
       }
     } catch (err) {
       console.error('Failed to fetch categories:', err);
@@ -42,7 +51,9 @@ const Products = () => {
   };
 
   const fetchProducts = async () => {
-    setLoading(true);
+    if (products.length === 0) {
+      setLoading(true);
+    }
     try {
       const search = searchParams.get('search') || searchTerm;
       let url = `/products?status=active`;
@@ -62,6 +73,9 @@ const Products = () => {
       const res = await API.get(url);
       if (res.data.success) {
         setProducts(res.data.products);
+        if (!search && (!selectedCategory || selectedCategory === 'All') && availability === 'all') {
+          setCachedProducts(res.data.products);
+        }
       }
     } catch (err) {
       console.error('Failed to fetch products:', err);

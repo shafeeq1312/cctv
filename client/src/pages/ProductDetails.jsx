@@ -14,26 +14,36 @@ import {
   Layers
 } from 'lucide-react';
 import API from '../services/api';
+import { getCachedProductById, setCachedProduct } from '../services/dataCache';
 import EnquiryModal from '../components/EnquiryModal';
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+  const cachedProduct = getCachedProductById(id);
+  const [product, setProduct] = useState(cachedProduct);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!cachedProduct);
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    const localProd = getCachedProductById(id);
+    if (localProd) {
+      setProduct(localProd);
+      setLoading(false);
+    }
     fetchProductDetails();
   }, [id]);
 
   const fetchProductDetails = async () => {
-    setLoading(true);
+    if (!product && !cachedProduct) {
+      setLoading(true);
+    }
     try {
       const res = await API.get(`/products/${id}`);
       if (res.data.success) {
         setProduct(res.data.product);
+        setCachedProduct(res.data.product);
 
         // Fetch related products in same category
         const relRes = await API.get(`/products?category=${encodeURIComponent(res.data.product.category)}&status=active`);

@@ -1,11 +1,26 @@
 const Service = require('../models/Service');
 
+// Fast In-Memory Cache
+const servicesCache = new Map();
+const CACHE_DURATION = 60 * 1000; // 60 seconds
+
+const invalidateCache = () => {
+  servicesCache.clear();
+};
+
 // @desc    Get all services
 // @route   GET /api/services
 // @access  Public
 const getServices = async (req, res) => {
   try {
     const { status } = req.query;
+    const cacheKey = status || 'active';
+    const cached = servicesCache.get(cacheKey);
+
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      return res.status(200).json(cached.data);
+    }
+
     let query = {};
     if (status === 'all') {
       // Admin view
@@ -14,7 +29,10 @@ const getServices = async (req, res) => {
     }
 
     const services = await Service.find(query).sort({ createdAt: 1 }).lean();
-    return res.status(200).json({ success: true, count: services.length, services });
+    const responseData = { success: true, count: services.length, services };
+    servicesCache.set(cacheKey, { timestamp: Date.now(), data: responseData });
+
+    return res.status(200).json(responseData);
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -33,6 +51,7 @@ const createService = async (req, res) => {
     const service = new Service({ title, description, icon, features, status });
     await service.save();
 
+    invalidateCache();
     return res.status(201).json({ success: true, message: 'Service created successfully', service });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -57,6 +76,7 @@ const updateService = async (req, res) => {
     if (status) service.status = status;
 
     await service.save();
+    invalidateCache();
     return res.status(200).json({ success: true, message: 'Service updated successfully', service });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -74,6 +94,7 @@ const deleteService = async (req, res) => {
     }
 
     await Service.findByIdAndDelete(req.params.id);
+    invalidateCache();
     return res.status(200).json({ success: true, message: 'Service deleted successfully' });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

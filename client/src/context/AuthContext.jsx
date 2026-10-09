@@ -5,53 +5,94 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('lucky_admin_token') || null);
+  const [token, setToken] = useState(() => {
+    return (
+      sessionStorage.getItem('lucky_admin_token') ||
+      localStorage.getItem('lucky_admin_token') ||
+      null
+    );
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAdmin = async () => {
-      if (!token) {
-        setAdmin(null);
-        setLoading(false);
+    let isMounted = true;
+
+    const verifyAdminSession = async () => {
+      const activeToken =
+        sessionStorage.getItem('lucky_admin_token') ||
+        localStorage.getItem('lucky_admin_token');
+
+      if (!activeToken) {
+        if (isMounted) {
+          setAdmin(null);
+          setToken(null);
+          setLoading(false);
+        }
         return;
       }
+
       try {
-        const res = await API.get('/admin/me');
-        if (res.data.success) {
-          setAdmin(res.data.admin);
-        } else {
-          logout();
+        const res = await API.get('/admin/me', { skipCache: true });
+        if (isMounted) {
+          if (res.data && res.data.success && res.data.admin) {
+            setAdmin(res.data.admin);
+            setToken(activeToken);
+          } else {
+            logout();
+          }
         }
       } catch (err) {
         console.error('Failed to authenticate admin session:', err);
-        logout();
+        if (isMounted) {
+          logout();
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchAdmin();
-  }, [token]);
+    verifyAdminSession();
 
-  const login = async (email, password) => {
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const login = async (email, password, rememberMe = false) => {
     try {
       const res = await API.post('/admin/login', { email, password });
-      if (res.data.success) {
-        const { token, admin } = res.data;
-        localStorage.setItem('lucky_admin_token', token);
-        setToken(token);
-        setAdmin(admin);
+      if (res.data && res.data.success) {
+        const { token: receivedToken, admin: receivedAdmin } = res.data;
+
+        if (rememberMe) {
+          localStorage.setItem('lucky_admin_token', receivedToken);
+          sessionStorage.removeItem('lucky_admin_token');
+        } else {
+          sessionStorage.setItem('lucky_admin_token', receivedToken);
+          localStorage.removeItem('lucky_admin_token');
+        }
+
+        setToken(receivedToken);
+        setAdmin(receivedAdmin);
         return { success: true };
       }
+      return {
+        success: false,
+        message: res.data?.message || 'Login failed. Please check credentials.'
+      };
     } catch (err) {
       return {
         success: false,
-        message: err.response?.data?.message || 'Login failed. Please check credentials.'
+        message:
+          err.response?.data?.message || 'Login failed. Please check credentials.'
       };
     }
   };
 
   const logout = () => {
+    sessionStorage.removeItem('lucky_admin_token');
     localStorage.removeItem('lucky_admin_token');
     setToken(null);
     setAdmin(null);

@@ -19,6 +19,8 @@ const ProductCard = ({ product, onEnquire }) => {
         <img
           src={product.image}
           alt={product.name}
+          loading="lazy"
+          decoding="async"
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}
           className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500 ease-out select-none"
