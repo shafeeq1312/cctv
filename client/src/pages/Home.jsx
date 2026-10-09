@@ -9,7 +9,8 @@ import {
   Search,
   Package,
   MapPin,
-  ShieldCheck
+  ShieldCheck,
+  RefreshCw
 } from 'lucide-react';
 import API from '../services/api';
 import { getCachedProducts, setCachedProducts } from '../services/dataCache';
