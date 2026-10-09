@@ -38,12 +38,12 @@ const About = () => {
       color: 'blue'
     },
     {
-      icon: Layers,
-      end: 6,
-      suffix: '+',
-      title: 'Core Security Services',
-      subtitle: 'CCTV, Biometrics, AMC & Cabling',
-      color: 'purple'
+      icon: Clock,
+      end: 24,
+      suffix: '/7',
+      title: 'On-Site Technician Support',
+      subtitle: 'Quick response emergency repairs',
+      color: 'amber'
     }
   ];
 

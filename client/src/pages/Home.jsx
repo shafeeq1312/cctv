@@ -95,12 +95,12 @@ const Home = () => {
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState('');
 
-  // Auto-slide hero images every 4.5 seconds
+  // Auto-slide hero images every 3 seconds using useEffect
   useEffect(() => {
     if (isHeroPaused) return;
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % HERO_SHOWCASE_IMAGES.length);
-    }, 4500);
+    }, 3000);
     return () => clearInterval(timer);
   }, [isHeroPaused]);
 
@@ -241,21 +241,15 @@ const Home = () => {
             >
               <div className="w-full relative rounded-3xl p-3 bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 shadow-2xl shadow-cyan-500/15 overflow-hidden group transition-all duration-500">
                 
-                {/* Top Badges Bar */}
-                <div className="absolute top-5 left-5 right-5 z-20 flex items-center justify-between pointer-events-none">
-                  {/* Category Type Badge */}
-                  <span className="bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full border border-cyan-500/40 text-[11px] font-black text-cyan-300 tracking-wider uppercase shadow-lg">
-                    {currentHero.badge}
-                  </span>
-
-                  {/* Live Surveillance Pulsing Indicator */}
-                  <div className="bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/40 flex items-center gap-2 shadow-lg">
+                {/* Top Live Surveillance Badge */}
+                <div className="absolute top-5 right-5 z-20 pointer-events-none">
+                  <div className="bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-rose-500/40 flex items-center gap-2 shadow-lg">
                     <span className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
                     </span>
                     <span className="text-[10px] font-black text-rose-300 uppercase tracking-wider">
-                      LIVE • {heroIndex + 1}/{HERO_SHOWCASE_IMAGES.length}
+                      LIVE SURVEILLANCE
                     </span>
                   </div>
                 </div>
